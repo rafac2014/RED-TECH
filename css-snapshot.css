@@ -1,0 +1,170 @@
+/*------Layout (No Edit)-------*/
+body#layout #outer-wrapper,
+body#layout .row {
+    width: auto;
+    padding: 0
+}
+
+body#layout {
+    width: 800px;
+    position: relative;
+    padding: 95px 5px 0;
+    margin: 0
+}
+
+body#layout div.section {
+    margin: 0 5px 10px !important;
+    padding: 16px 16px 18px !important;
+}
+
+body#layout .section h4 {
+    font-size: 14px;
+    margin: 0
+}
+
+body#layout .layout-widget-description {
+    display: none
+}
+
+body#layout .theme-options,
+body#layout #main-menu .widget {
+    display: block !important;
+}
+
+body#layout div.sora-panel {
+    background-color: #d7d7d7 !important;
+    overflow: hidden !important;
+    border-color: #bcbcbc
+}
+
+body#layout .sora-panel .widget {
+    float: left;
+    width: 49%;
+    margin-right: 2%
+}
+
+body#layout .sora-panel #LinkList71 {
+    margin-right: 0
+}
+
+body#layout #top-bar {
+    height: auto
+}
+
+body#layout #top-bar .container {
+    display: flex
+}
+
+body#layout #top-bar .container {
+    height: auto;
+}
+
+body#layout #add-wrapper {
+    margin: 0px;
+}
+
+body#layout .top-bar-nav,
+body#layout .top-bar-social {
+    width: 50%
+}
+
+body#layout #slider-section .widget {
+    display: block;
+}
+
+body#layout #header-wrap {
+    height: auto
+}
+
+body#layout .header-header {
+    float: left;
+    width: 100%;
+    height: auto;
+    padding: 0
+}
+
+body#layout .header-header .container {
+    display: flex
+}
+
+body#layout div.header-logo,
+body#layout div.header-ads {
+    float: left;
+    width: 50%;
+    height: auto;
+    max-width: none;
+    max-height: none
+}
+
+body#layout .header-ads .widget-content {
+    width: auto
+}
+
+body#layout .header-ads .add_widget {
+    padding: 15px !important
+}
+
+body#layout .mobile-header {
+    display: block;
+    float: right;
+    width: 33.33%;
+    height: auto
+}
+
+body#layout .mobile-menu {
+    display: none
+}
+
+body#layout .header-menu {
+    float: left;
+    width: 45%;
+    height: auto
+}
+
+body#layout #main-menu {
+    height: auto
+}
+
+body#layout #hot-wrapper .widget {
+    display: block
+}
+
+body#layout #content-wrapper {
+    margin: 0
+}
+
+body#layout #content-wrapper > .container {
+    display: flex;
+    margin: 0
+}
+
+body#layout #main-wrapper {
+    width: 66.66%;
+    padding: 0
+}
+
+body#layout #sidebar-wrapper {
+    width: 33.33%;
+    padding: 0;
+    display: block;
+}
+
+body#layout .sidebar .widget,
+body#layout .sidebar .widget-content {
+    float: none;
+    overflow: visible
+}
+
+body#layout .footer-widgets-wrap {
+    display: flex
+}
+
+body#layout .footer-widgets-wrap div.footer {
+    width: 100%
+}
+
+body#layout .show-mobile-menu,
+body#layout .show-search,
+body#layout #nav-search {
+    display: none
+}
