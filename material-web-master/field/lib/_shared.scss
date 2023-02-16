@@ -1,0 +1,75 @@
+//
+// Copyright 2021 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use '../../sass/resolvers';
+@use '../../sass/typography';
+@use './content';
+@use './label';
+@use './supporting-text';
+// go/keep-sorted end
+
+@mixin styles() {
+  :host {
+    display: inline-flex;
+  }
+
+  .field {
+    display: inline-flex;
+    flex: 1;
+    flex-direction: column;
+    // Allow the use of block/inline reflexive RTL properties without impacting
+    // structure when languages change.
+    writing-mode: horizontal-tb;
+  }
+
+  .container {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    flex: 1;
+    flex-basis: var(--_container-height);
+    padding-top: var(--_container-padding-vertical);
+    padding-bottom: var(--_container-padding-vertical);
+    position: relative;
+  }
+
+  .disabled {
+    pointer-events: none;
+  }
+
+  // TODO(b/239188049): remove when layout tokens are ready
+  .with-start .start,
+  .with-end .end {
+    min-width: 48px;
+  }
+
+  .with-start .start {
+    margin-inline-end: 4px;
+  }
+
+  .with-end .end {
+    margin-inline-start: 4px;
+  }
+
+  @include content.styles;
+  @include label.styles;
+  @include supporting-text.styles;
+}
+
+@function resolve-tokens($tokens) {
+  $tokens: typography.resolve-theme(
+    $tokens,
+    map.get(resolvers.$material, typography),
+    label-text,
+    label-text-populated,
+    supporting-text
+  );
+
+  @return $tokens;
+}

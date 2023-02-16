@@ -1,0 +1,84 @@
+//
+// Copyright 2021 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// stylelint-disable selector-class-pattern --
+// Selector '.md3-*' should only be used in this project.
+
+// go/keep-sorted start
+@use '../../sass/typography';
+// go/keep-sorted end
+
+@mixin styles() {
+  .md3-text-field__input {
+    appearance: none;
+    background: none;
+    border: none;
+    caret-color: var(--_caret-color);
+    color: currentColor;
+    outline: none;
+    padding: 0;
+    text-align: inherit;
+    width: 100%;
+
+    &::placeholder {
+      color: currentColor;
+      opacity: 1;
+    }
+
+    // Remove built-in datepicker icon on Chrome
+    &::-webkit-calendar-picker-indicator {
+      display: none;
+    }
+
+    @media (forced-colors: active) {
+      background-color: Field; // Remove white background in Firefox HCM
+    }
+  }
+
+  :focus-within {
+    .md3-text-field__input {
+      caret-color: var(--_focus-caret-color);
+    }
+  }
+
+  .md3-text-field--error:focus-within {
+    .md3-text-field__input {
+      caret-color: var(--_error-focus-caret-color);
+    }
+  }
+
+  .md3-text-field__input,
+  .md3-text-field__prefix,
+  .md3-text-field__suffix {
+    @include typography.theme-styles(
+      (
+        font: var(--_input-text-font),
+        line-height: var(--_input-text-line-height),
+        size: var(--_input-text-size),
+        tracking: var(--_input-text-tracking),
+        weight: var(--_input-text-weight),
+      )
+    );
+  }
+
+  .md3-text-field:not(.md3-text-field--disabled) {
+    .md3-text-field__prefix,
+    .md3-text-field__suffix {
+      color: var(--_input-text-prefix-color);
+    }
+
+    .md3-text-field__input::placeholder {
+      color: var(--_input-text-placeholder-color);
+    }
+  }
+
+  .md3-text-field__prefix {
+    padding-inline-end: var(--_input-text-prefix-padding);
+  }
+
+  .md3-text-field__suffix {
+    padding-inline-start: var(--_input-text-suffix-padding);
+  }
+}

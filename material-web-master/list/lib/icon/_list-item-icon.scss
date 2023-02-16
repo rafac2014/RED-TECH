@@ -1,0 +1,71 @@
+//
+// Copyright 2022 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// stylelint-disable selector-class-pattern --
+// Selector '.md3-*' should only be used in this project.
+
+// go/keep-sorted start
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use '../../../sass/map-ext';
+@use '../../../sass/theme';
+// go/keep-sorted end
+
+$_custom-property-prefix: 'list-item-icon';
+
+$_reference: (
+  list-item-icon-color: #000,
+  list-item-icon-size: 0,
+  list-item-icon-opacity: 1,
+);
+
+@mixin theme($tokens) {
+  $tokens: theme.validate-theme($_reference, $tokens);
+  $tokens: theme.create-theme-vars($tokens, $_custom-property-prefix);
+
+  @include theme.emit-theme-vars($tokens);
+}
+
+@mixin styles() {
+  $tokens: $_reference;
+  $tokens: theme.create-theme-vars($tokens, $_custom-property-prefix);
+
+  :host {
+    @each $token, $value in $tokens {
+      --_#{$token}: #{$value};
+    }
+
+    display: inline-flex;
+  }
+
+  .md3-list-item__icon {
+    color: var(--_list-item-icon-color);
+    opacity: var(--_list-item-icon-opacity);
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: var(--_list-item-icon-size);
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-flex;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    height: 100%;
+    width: 100%;
+    padding-inline-start: 16px;
+
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+  }
+}

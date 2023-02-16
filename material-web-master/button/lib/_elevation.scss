@@ -1,0 +1,79 @@
+//
+// Copyright 2021 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// stylelint-disable selector-class-pattern --
+// Selector '.md3-*' should only be used in this project.
+
+// go/keep-sorted start
+@use 'sass:map';
+@use 'sass:meta';
+// go/keep-sorted end
+// go/keep-sorted start
+@use '../../elevation/lib/elevation';
+// go/keep-sorted end
+
+@mixin styles() {
+  md-elevation {
+    inset: 0;
+    position: absolute;
+  }
+
+  .md3-button {
+    @include elevation.theme(
+      (
+        // TODO: replace duration with animation tokens
+        duration: 280ms,
+        level: var(--_container-elevation),
+        shadow-color: var(--_container-shadow-color),
+        surface-tint: var(--_container-surface-tint-layer-color)
+      )
+    );
+
+    // apply elevation in order of focused, hovered, pressed, disabled
+    // this ensures a button will have hover elevation after being focused
+    &:focus {
+      @include elevation.theme(
+        (
+          level: var(--_focus-container-elevation),
+        )
+      );
+    }
+
+    &:hover {
+      @include elevation.theme(
+        (
+          level: var(--_hover-container-elevation),
+        )
+      );
+    }
+
+    &:active {
+      @include elevation.theme(
+        (
+          level: var(--_pressed-container-elevation),
+        )
+      );
+    }
+
+    &:disabled {
+      @include elevation.theme(
+        (
+          level: var(--_disabled-container-elevation),
+        )
+      );
+    }
+  }
+}
+
+@function resolve-tokens($tokens) {
+  @return elevation.resolve-tokens(
+    $tokens,
+    'container-elevation',
+    'disabled-container-elevation',
+    'focus-container-elevation',
+    'hover-container-elevation',
+    'pressed-container-elevation'
+  );
+}

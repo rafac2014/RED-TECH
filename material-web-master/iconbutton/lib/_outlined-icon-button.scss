@@ -1,0 +1,167 @@
+//
+// Copyright 2022 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// stylelint-disable selector-class-pattern --
+// Selector '.md3-*' should only be used in this project.
+
+// go/keep-sorted start
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use '../../focus/focus-ring';
+@use '../../ripple/ripple';
+@use '../../sass/color';
+@use '../../sass/resolvers';
+@use '../../sass/theme';
+@use '../../tokens';
+@use './shared';
+// go/keep-sorted end
+
+$_custom-property-prefix: 'outlined-icon-button';
+
+@mixin theme($tokens) {
+  $tokens: theme.validate-theme(
+    tokens.md-comp-outlined-icon-button-values(),
+    $tokens
+  );
+  $tokens: shared.flatten-disabled-colors($tokens, $variant: 'outlined');
+  $tokens: theme.create-theme-vars($tokens, $_custom-property-prefix);
+  $tokens: shared.resolve-shape-tokens($tokens);
+
+  @include theme.emit-theme-vars($tokens);
+}
+
+@mixin styles() {
+  $tokens: tokens.md-comp-outlined-icon-button-values();
+  $tokens: shared.flatten-disabled-colors($tokens, $variant: 'outlined');
+  $tokens: theme.create-theme-vars($tokens, $_custom-property-prefix);
+  $tokens: shared.resolve-shape-tokens($tokens);
+
+  :host {
+    @each $token, $value in $tokens {
+      --_#{$token}: #{$value};
+    }
+
+    @include focus-ring.theme(
+      (
+        shape: (
+          var(--_container-shape-start-start),
+          var(--_container-shape-start-end),
+          var(--_container-shape-end-end),
+          var(--_container-shape-end-start),
+        ),
+      )
+    );
+  }
+
+  .md3-icon-button--outlined {
+    background-color: transparent;
+    color: var(--_unselected-icon-color);
+
+    @include ripple.theme(
+      (
+        focus-color: var(--_unselected-focus-state-layer-color),
+        focus-opacity: var(--_focus-state-layer-opacity),
+        hover-color: var(--_unselected-hover-state-layer-color),
+        hover-opacity: var(--_hover-state-layer-opacity),
+        pressed-color: var(--_unselected-pressed-state-layer-color),
+        pressed-opacity: var(--_pressed-state-layer-opacity),
+      )
+    );
+
+    &::before {
+      border-color: var(--_unselected-outline-color);
+      border-width: var(--_unselected-outline-width);
+    }
+
+    &:hover {
+      color: var(--_unselected-hover-icon-color);
+    }
+
+    &:focus {
+      color: var(--_unselected-focus-icon-color);
+    }
+
+    &:active {
+      color: var(--_unselected-pressed-icon-color);
+    }
+
+    &:disabled {
+      color: var(--_disabled-icon-color);
+
+      &::before {
+        border-color: var(--_disabled-unselected-outline-color);
+        opacity: var(--_disabled-unselected-outline-opacity);
+      }
+    }
+  }
+
+  .md3-icon-button--outlined::before {
+    block-size: 100%;
+    border-style: solid;
+    border-radius: inherit;
+    box-sizing: border-box;
+    content: '';
+    inline-size: 100%;
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+  }
+
+  // Selected toggle buttons have no outline.
+  .md3-icon-button--outlined.md3-icon-button--selected::before {
+    border-width: 0;
+  }
+
+  // Selected icon button toggle.
+  .md3-icon-button--selected {
+    &:not(:disabled) {
+      background-color: var(--_selected-container-color);
+      color: var(--_selected-icon-color);
+
+      &:hover {
+        color: var(--_selected-hover-icon-color);
+      }
+
+      &:focus {
+        color: var(--_selected-focus-icon-color);
+      }
+
+      &:active {
+        color: var(--_selected-pressed-icon-color);
+      }
+    }
+
+    &:disabled {
+      background-color: var(--_disabled-selected-container-color);
+    }
+
+    @include ripple.theme(
+      (
+        focus-color: var(--_selected-focus-state-layer-color),
+        focus-opacity: var(--_focus-state-layer-opacity),
+        hover-color: var(--_selected-hover-state-layer-color),
+        hover-opacity: var(--_hover-state-layer-opacity),
+        pressed-color: var(--_selected-pressed-state-layer-color),
+        pressed-opacity: var(--_pressed-state-layer-opacity),
+      )
+    );
+  }
+
+  @media (forced-colors: active) {
+    // Selected button in HCM has an outline.
+    .md3-icon-button--selected {
+      &::before {
+        border-color: var(--_unselected-outline-color);
+        border-width: var(--_unselected-outline-width);
+      }
+
+      &:disabled::before {
+        border-color: var(--_disabled-unselected-outline-color);
+        opacity: var(--_disabled-unselected-outline-opacity);
+      }
+    }
+  }
+}

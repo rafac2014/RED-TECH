@@ -1,0 +1,143 @@
+//
+// Copyright 2022 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// stylelint-disable selector-class-pattern --
+// Selector '.md3-*' should only be used in this project.
+
+// go/keep-sorted start
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use '../../focus/focus-ring';
+@use '../../ripple/ripple';
+@use '../../sass/theme';
+@use '../../tokens';
+@use './shared';
+// go/keep-sorted end
+
+$_custom-property-prefix: 'filled-icon-button';
+
+@mixin theme($tokens) {
+  $tokens: theme.validate-theme(
+    tokens.md-comp-filled-icon-button-values(),
+    $tokens
+  );
+  $tokens: shared.flatten-disabled-colors($tokens, $variant: 'filled');
+  $tokens: theme.create-theme-vars($tokens, $_custom-property-prefix);
+  $tokens: shared.resolve-shape-tokens($tokens);
+
+  @include theme.emit-theme-vars($tokens);
+}
+
+@mixin styles() {
+  $tokens: tokens.md-comp-filled-icon-button-values();
+  $tokens: shared.flatten-disabled-colors($tokens, $variant: 'filled');
+  $tokens: theme.create-theme-vars($tokens, $_custom-property-prefix);
+  $tokens: shared.resolve-shape-tokens($tokens);
+
+  :host {
+    @each $token, $value in $tokens {
+      --_#{$token}: #{$value};
+    }
+
+    @include focus-ring.theme(
+      (
+        shape: (
+          var(--_container-shape-start-start),
+          var(--_container-shape-start-end),
+          var(--_container-shape-end-end),
+          var(--_container-shape-end-start),
+        ),
+      )
+    );
+  }
+
+  .md3-icon-button {
+    background-color: var(--_container-color);
+    color: var(--_icon-color);
+
+    &:hover {
+      color: var(--_hover-icon-color);
+    }
+
+    &:focus {
+      color: var(--_focus-icon-color);
+    }
+
+    &:active {
+      color: var(--_pressed-icon-color);
+    }
+
+    &:disabled {
+      background-color: var(--_disabled-container-color);
+      color: var(--_disabled-icon-color);
+    }
+
+    @include ripple.theme(
+      (
+        focus-color: var(--_focus-state-layer-color),
+        focus-opacity: var(--_focus-state-layer-opacity),
+        hover-color: var(--_hover-state-layer-color),
+        hover-opacity: var(--_hover-state-layer-opacity),
+        pressed-color: var(--_pressed-state-layer-color),
+        pressed-opacity: var(--_pressed-state-layer-opacity),
+      )
+    );
+  }
+
+  .md3-icon-button--toggle-filled {
+    &:not(:disabled) {
+      background-color: var(--_unselected-container-color);
+      color: var(--_toggle-unselected-icon-color);
+
+      &:hover {
+        color: var(--_toggle-unselected-hover-icon-color);
+      }
+
+      &:focus {
+        color: var(--_toggle-unselected-focus-icon-color);
+      }
+
+      &:active {
+        color: var(--_toggle-unselected-pressed-icon-color);
+      }
+    }
+
+    @include ripple.theme(
+      (
+        focus-color: var(--_toggle-unselected-focus-state-layer-color),
+        hover-color: var(--_toggle-unselected-hover-state-layer-color),
+        pressed-color: var(--_toggle-unselected-pressed-state-layer-color),
+      )
+    );
+  }
+
+  .md3-icon-button--selected {
+    &:not(:disabled) {
+      background-color: var(--_selected-container-color);
+      color: var(--_toggle-selected-icon-color);
+
+      &:hover {
+        color: var(--_toggle-selected-hover-icon-color);
+      }
+
+      &:focus {
+        color: var(--_toggle-selected-focus-icon-color);
+      }
+
+      &:active {
+        color: var(--_toggle-selected-pressed-icon-color);
+      }
+    }
+
+    @include ripple.theme(
+      (
+        focus-color: var(--_toggle-selected-focus-state-layer-color),
+        hover-color: var(--_toggle-selected-hover-state-layer-color),
+        pressed-color: var(--_toggle-selected-pressed-state-layer-color),
+      )
+    );
+  }
+}

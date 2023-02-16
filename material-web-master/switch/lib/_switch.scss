@@ -1,0 +1,181 @@
+//
+// Copyright 2021 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// stylelint-disable selector-class-pattern --
+// Selector '.md3-*' should only be used in this project.
+
+// PUBLIC PROPERTIES
+
+// go/keep-sorted start
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use '../../focus/focus-ring';
+@use '../../sass/color';
+@use '../../sass/shape';
+@use '../../sass/theme';
+@use '../../sass/touch-target';
+@use '../../sass/var';
+@use '../../tokens';
+@use './handle';
+@use './icon';
+@use './track';
+// go/keep-sorted end
+
+$_forced-colors-theme: (
+  disabled-selected-icon-color: GrayText,
+  disabled-selected-icon-opacity: 1,
+  disabled-selected-track-color: GrayText,
+  disabled-track-opacity: 1,
+  disabled-unselected-handle-color: GrayText,
+  disabled-unselected-handle-opacity: 1,
+  disabled-unselected-icon-color: Canvas,
+  disabled-unselected-icon-opacity: 1,
+  selected-focus-track-color: ButtonText,
+  selected-hover-track-color: ButtonText,
+  selected-icon-color: ButtonText,
+  selected-pressed-track-color: ButtonText,
+  selected-track-color: ButtonText,
+  unselected-focus-handle-color: ButtonText,
+  unselected-handle-color: ButtonText,
+  unselected-hover-handle-color: ButtonText,
+  unselected-icon-color: Canvas,
+  unselected-pressed-handle-color: ButtonText,
+);
+
+@mixin theme($tokens) {
+  $tokens: theme.validate-theme(tokens.md-comp-switch-values(), $tokens);
+  $tokens: _flatten-disable-colors($tokens);
+  $tokens: theme.create-theme-vars($tokens, 'switch');
+  $tokens: shape.resolve-tokens($tokens, 'track-shape', 'handle-shape');
+
+  @include theme.emit-theme-vars($tokens);
+}
+
+@mixin styles() {
+  $tokens: tokens.md-comp-switch-values();
+  $tokens: _flatten-disable-colors($tokens);
+  $tokens: theme.create-theme-vars($tokens, 'switch');
+  $tokens: shape.resolve-tokens($tokens, 'track-shape', 'handle-shape');
+
+  :host {
+    @each $token, $value in $tokens {
+      --_#{$token}: #{$value};
+    }
+
+    // TODO(b/230630968): create a forced-colors-mode mixin
+    @media screen and (forced-colors: active) {
+      @include theme($_forced-colors-theme);
+    }
+
+    display: inline-flex;
+    outline: none;
+    vertical-align: top;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  md-focus-ring {
+    @include focus-ring.theme(
+      (
+        shape: (
+          var(--_track-shape-start-start),
+          var(--_track-shape-start-end),
+          var(--_track-shape-end-start),
+          var(--_track-shape-end-end),
+        ),
+      )
+    );
+  }
+
+  .md3-switch {
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    flex-shrink: 0; // Stop from collapsing in flex containers
+    margin: 0;
+    outline: none;
+    padding: 0;
+    position: relative;
+    width: var(--_track-width);
+    height: var(--_track-height);
+
+    // Track shape
+    border-start-start-radius: var(--_track-shape-start-start);
+    border-start-end-radius: var(--_track-shape-start-end);
+    border-end-end-radius: var(--_track-shape-end-end);
+    border-end-start-radius: var(--_track-shape-end-start);
+  }
+
+  // Touch target
+  .md3-switch__touch {
+    @include touch-target.touch-target();
+  }
+
+  // Disabled
+  .md3-switch:disabled {
+    cursor: default;
+    pointer-events: none;
+  }
+
+  // Disabled - Track
+  .md3-switch__track {
+    .md3-switch:disabled & {
+      background-color: transparent;
+      border-color: transparent;
+
+      &::before {
+        background-clip: content-box;
+      }
+    }
+    .md3-switch--selected:disabled & {
+      background-clip: border-box;
+    }
+  }
+
+  @include track.styles();
+  @include handle.styles();
+  @include icon.styles();
+}
+
+@function _flatten-disable-colors($theme) {
+  @return color.join-color-and-opacity-pairs(
+    $theme,
+    (
+      // Disabled Handle
+      (
+          color-key: disabled-selected-handle-color,
+          opacity-key: disabled-selected-handle-opacity
+        ),
+      (
+        color-key: disabled-unselected-handle-color,
+        opacity-key: disabled-unselected-handle-opacity
+      ),
+      // Disabled Track
+      (
+          color-key: disabled-selected-track-color,
+          opacity-key: disabled-track-opacity
+        ),
+      (
+        color-key: disabled-unselected-track-color,
+        opacity-key: disabled-track-opacity
+      ),
+      (
+        color-key: disabled-unselected-track-outline-color,
+        opacity-key: disabled-track-opacity
+      ),
+      // Disabled Icon
+      (
+          color-key: disabled-selected-icon-color,
+          opacity-key: disabled-selected-icon-opacity
+        ),
+      (
+        color-key: disabled-unselected-icon-color,
+        opacity-key: disabled-unselected-icon-opacity
+      )
+    )
+  );
+}

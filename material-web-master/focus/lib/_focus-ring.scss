@@ -1,0 +1,55 @@
+//
+// Copyright 2021 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// go/keep-sorted start
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use '../../sass/shape';
+@use '../../sass/theme';
+@use './md-comp-focus-ring';
+// go/keep-sorted end
+
+$_custom-property-prefix: 'focus-ring';
+
+@mixin theme($tokens) {
+  $tokens: theme.validate-theme(md-comp-focus-ring.values(), $tokens);
+  $tokens: theme.create-theme-vars($tokens, $_custom-property-prefix);
+  $tokens: shape.resolve-tokens($tokens, 'shape');
+
+  @include theme.emit-theme-vars($tokens);
+}
+
+@mixin styles() {
+  $tokens: md-comp-focus-ring.values();
+  $tokens: theme.create-theme-vars($tokens, $_custom-property-prefix);
+  $tokens: shape.resolve-tokens($tokens, 'shape');
+
+  :host {
+    @each $token, $value in $tokens {
+      --_#{$token}: #{$value};
+    }
+
+    display: none;
+    position: absolute;
+    box-sizing: border-box;
+    pointer-events: none;
+    border: var(--_width) solid var(--_color);
+    border-start-start-radius: var(--_shape-start-start);
+    border-start-end-radius: var(--_shape-start-end);
+    border-end-start-radius: var(--_shape-end-start);
+    border-end-end-radius: var(--_shape-end-end);
+    // Note that the ring will not respect its parent's border. This will not be
+    // an issue as long as border is set via a sibling node, similar to ripple
+    // and touch target.
+    $vertical-inset: calc(-1 * (var(--_offset-vertical) + var(--_width)));
+    $horizontal-inset: calc(-1 * (var(--_offset-horizontal) + var(--_width)));
+    inset: $vertical-inset $horizontal-inset;
+  }
+
+  :host([visible]) {
+    display: flex;
+  }
+}

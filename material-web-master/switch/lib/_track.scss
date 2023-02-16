@@ -1,0 +1,98 @@
+//
+// Copyright 2022 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// stylelint-disable selector-class-pattern --
+// Selector '.md3-*' should only be used in this project.
+
+// go/keep-sorted start
+@use 'sass:map';
+// go/keep-sorted end
+
+@mixin styles() {
+  .md3-switch__track {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+
+    border-radius: inherit;
+
+    // Center content
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: background-color 67ms linear;
+    background-color: var(--_selected-track-color);
+
+    .md3-switch:disabled & {
+      transition: none;
+    }
+
+    .md3-switch--selected:hover & {
+      background-color: var(--_selected-hover-track-color);
+    }
+
+    .md3-switch--selected:focus-visible & {
+      background-color: var(--_selected-focus-track-color);
+    }
+
+    .md3-switch--selected:active & {
+      background-color: var(--_selected-pressed-track-color);
+    }
+
+    .md3-switch--selected:disabled & {
+      background-color: var(--_disabled-selected-track-color);
+    }
+
+    &::before {
+      content: '';
+      display: flex;
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      border-radius: inherit;
+      box-sizing: border-box;
+      border-style: solid;
+
+      transition-property: opacity, background-color;
+      transition-timing-function: linear;
+      transition-duration: 67ms;
+
+      border-width: var(--_track-outline-width);
+      background-color: var(--_unselected-track-color);
+      border-color: var(--_unselected-track-outline-color);
+
+      .md3-switch:disabled & {
+        transition: none;
+      }
+
+      .md3-switch--selected & {
+        // When selected, turn off ::before
+        opacity: 0;
+      }
+
+      .md3-switch--unselected:hover & {
+        background-color: var(--_unselected-hover-track-color);
+        border-color: var(--_unselected-hover-track-outline-color);
+      }
+
+      .md3-switch--unselected:focus-visible & {
+        background-color: var(--_unselected-focus-track-color);
+        border-color: var(--_unselected-focus-track-outline-color);
+      }
+
+      .md3-switch--unselected:active & {
+        background-color: var(--_unselected-pressed-track-color);
+        border-color: var(--_unselected-pressed-track-outline-color);
+      }
+
+      .md3-switch--unselected:disabled & {
+        background-color: var(--_disabled-unselected-track-color);
+        border-color: var(--_disabled-unselected-track-outline-color);
+      }
+    }
+  }
+}

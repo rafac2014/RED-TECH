@@ -1,0 +1,40 @@
+//
+// Copyright 2022 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// stylelint-disable selector-class-pattern --
+// Selector '.md3-*' should only be used in this project.
+
+// go/keep-sorted start
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use '../../elevation/lib/elevation';
+// go/keep-sorted end
+
+@mixin styles() {
+  .md3-navigation-drawer-modal {
+    background-color: var(--_container-color);
+    border-start-start-radius: var(--_container-shape-start-start);
+    border-start-end-radius: var(--_container-shape-start-end);
+    border-end-end-radius: var(--_container-shape-end-end);
+    border-end-start-radius: var(--_container-shape-end-start);
+    height: var(--_container-height);
+
+    &.md3-navigation-drawer-modal--opened {
+      inline-size: var(--_container-width);
+    }
+
+    .md3-navigation-drawer-modal__slot-content {
+      min-inline-size: var(--_container-width);
+      max-inline-size: var(--_container-width);
+    }
+  }
+}
+
+@function resolve-tokens($tokens) {
+  $tokens: elevation.resolve-tokens($tokens, 'modal-container-elevation');
+
+  @return $tokens;
+}

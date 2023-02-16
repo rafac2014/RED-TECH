@@ -1,0 +1,73 @@
+//
+// Copyright 2022 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// stylelint-disable selector-class-pattern --
+// Selector '.md3-*' should only be used in this project.
+
+// go/keep-sorted start
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use '../../tokens';
+// go/keep-sorted end
+
+$_md-sys-motion: tokens.md-sys-motion-values();
+$_easing-standard: map.get($_md-sys-motion, easing-standard);
+
+@mixin styles() {
+  .md3-switch__icons {
+    position: relative;
+    height: 100%;
+    width: 100%;
+  }
+
+  .md3-switch__icon {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+
+    transition: fill 67ms linear, opacity 33ms linear,
+      transform 167ms $_easing-standard;
+    opacity: 0;
+
+    .md3-switch:disabled & {
+      transition: none;
+    }
+  }
+
+  .md3-switch--selected .md3-switch__icon--on,
+  .md3-switch--unselected .md3-switch__icon--off {
+    opacity: 1;
+  }
+
+  // rotate selected icon into view when there is no unselected icon
+  .md3-switch--unselected
+    .md3-switch__handle:not(.md3-switch__handle--big)
+    .md3-switch__icon--on {
+    transform: rotate(-45deg);
+  }
+
+  .md3-switch__icon {
+    .md3-switch--selected & {
+      width: var(--_selected-icon-size);
+      height: var(--_selected-icon-size);
+      fill: var(--_selected-icon-color);
+    }
+
+    .md3-switch--unselected & {
+      width: var(--_unselected-icon-size);
+      height: var(--_unselected-icon-size);
+      fill: var(--_unselected-icon-color);
+    }
+
+    .md3-switch--selected:disabled & {
+      fill: var(--_disabled-selected-icon-color);
+    }
+
+    .md3-switch--unselected:disabled & {
+      fill: var(--_disabled-unselected-icon-color);
+    }
+  }
+}

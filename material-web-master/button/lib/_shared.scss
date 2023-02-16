@@ -1,0 +1,195 @@
+//
+// Copyright 2021 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// stylelint-disable selector-class-pattern --
+// Selector '.md3-*' should only be used in this project.
+
+// go/keep-sorted start
+@use 'sass:map';
+// go/keep-sorted end
+// go/keep-sorted start
+@use '../../focus/focus-ring';
+@use '../../ripple/ripple';
+@use '../../sass/color';
+@use '../../sass/dom';
+@use '../../sass/resolvers';
+@use '../../sass/typography';
+// go/keep-sorted end
+
+@mixin styles() {
+  :host {
+    display: inline-flex;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    /**
+     * Override vertical-align with shortest value "top". Vertical-align's default
+     * "baseline" value causes buttons to be misaligned next to each other if one
+     * button has an icon and the other does not.
+     */
+    vertical-align: top;
+
+    @include ripple.theme(
+      (
+        hover-color: var(--_hover-state-layer-color),
+        focus-color: var(--_focus-state-layer-color),
+        pressed-color: var(--_pressed-state-layer-color),
+        hover-opacity: var(--_hover-state-layer-opacity),
+        focus-opacity: var(--_focus-state-layer-opacity),
+        pressed-opacity: var(--_pressed-state-layer-opacity),
+      )
+    );
+
+    @include focus-ring.theme(
+      (
+        shape: (
+          var(--_container-shape-start-start),
+          var(--_container-shape-start-end),
+          var(--_container-shape-end-end),
+          var(--_container-shape-end-start),
+        ),
+      )
+    );
+  }
+
+  :host([disabled]) {
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .md3-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-inline-size: 64px;
+    border: none;
+    outline: none;
+    line-height: inherit;
+    user-select: none;
+    -webkit-appearance: none;
+    vertical-align: middle;
+    background: transparent;
+    text-decoration: none;
+    inline-size: 100%;
+    position: relative;
+    z-index: 0; // Place content on top of elevation and ripple
+    block-size: var(--_container-height);
+    font-family: var(--_label-text-font);
+    font-size: var(--_label-text-size);
+    letter-spacing: var(--_label-text-tracking);
+    font-weight: var(--_label-text-weight);
+    background-color: var(--_container-color);
+    color: var(--_label-text-color);
+    // TODO(b/181413732): Verify token below are named correctly
+    padding-inline-start: var(--_spacing-leading);
+    padding-inline-end: var(--_spacing-trailing);
+    gap: 8px;
+
+    &::-moz-focus-inner {
+      padding: 0;
+      border: 0;
+    }
+
+    &:hover {
+      color: var(--_hover-label-text-color);
+      cursor: pointer;
+    }
+
+    &:focus {
+      color: var(--_focus-label-text-color);
+    }
+
+    &:active {
+      color: var(--_pressed-label-text-color);
+      outline: none;
+    }
+
+    &:disabled {
+      background-color: var(--_disabled-container-color);
+      color: var(--_disabled-label-text-color);
+    }
+
+    @media (forced-colors: active) {
+      &::before {
+        @include dom.transparent-border();
+      }
+    }
+  }
+
+  .md3-button,
+  .md3-button__ripple {
+    border-start-start-radius: var(--_container-shape-start-start);
+    border-start-end-radius: var(--_container-shape-start-end);
+    border-end-start-radius: var(--_container-shape-end-start);
+    border-end-end-radius: var(--_container-shape-end-end);
+  }
+
+  md-elevation,
+  .md3-button__ripple {
+    z-index: -1; // Place behind content
+  }
+
+  // TODO(b/181413732): Verify token below are named correctly
+  .md3-button--icon-leading {
+    padding-inline-start: var(--_with-icon-spacing-leading);
+    padding-inline-end: var(--_with-icon-spacing-trailing);
+  }
+
+  .md3-button--icon-trailing {
+    padding-inline-start: var(--_with-trailing-icon-spacing-leading);
+    padding-inline-end: var(--_with-trailing-icon-spacing-trailing);
+  }
+
+  .md3-link-button-wrapper {
+    inline-size: 100%;
+  }
+}
+
+@function flatten-disabled-colors($tokens) {
+  @return color.join-color-and-opacity-pairs(
+    $tokens,
+    (
+      (
+        color-key: 'disabled-container-color',
+        opacity-key: 'disabled-container-opacity'
+      ),
+      (
+        color-key: 'disabled-label-text-color',
+        opacity-key: 'disabled-label-text-opacity'
+      ),
+      (
+        color-key: 'with-icon-disabled-icon-color',
+        opacity-key: 'with-icon-disabled-icon-opacity'
+      ),
+      (
+        color-key: 'disabled-outline-color',
+        opacity-key: 'disabled-outline-opacity'
+      )
+    )
+  );
+}
+
+@function remove-unsupported-tokens($tokens) {
+  // b/193825150: Text and Outlined Button don't have `container-shadow-color`,
+  // leaving `container-elevation` useless.
+  @if not map.get($tokens, 'container-shadow-color') {
+    $tokens: map.remove($tokens, 'container-elevation');
+  }
+
+  $unsupported-tokens: (
+    // TODO(b/233225796): Clean up this removal of `dragged` tokens.
+    'dragged-container-elevation',
+    'dragged-label-text-color',
+    'dragged-state-layer-color',
+    'dragged-state-layer-opacity',
+    'with-icon-dragged-icon-color',
+    // b/189346077#comment2: `label-text-line-height` is included in token set
+    // "just in case", but it's okay to ignore.
+    'label-text-line-height',
+    // b/203778922: `label-text-type` used by other platforms but not web.
+    'label-text-type'
+  );
+  @return map.remove($tokens, $unsupported-tokens);
+}

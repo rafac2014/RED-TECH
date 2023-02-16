@@ -1,0 +1,43 @@
+//
+// Copyright 2022 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// stylelint-disable selector-class-pattern --
+// Selector '.md3-*' should only be used in this project.
+
+// go/keep-sorted start
+@use '../../sass/theme';
+@use '../../tokens';
+@use './shared';
+// go/keep-sorted end
+
+@mixin theme($tokens) {
+  $tokens: theme.validate-theme(tokens.md-comp-fab-surface-values(), $tokens);
+  $tokens: shared.resolve-tokens($tokens);
+  $tokens: theme.create-theme-vars($tokens, fab);
+
+  @include theme.emit-theme-vars($tokens);
+}
+
+@mixin styles() {
+  $tokens: tokens.md-comp-fab-surface-values();
+
+  $tokens: shared.resolve-tokens($tokens);
+  $tokens: theme.create-theme-vars($tokens, fab);
+
+  :host {
+    @each $token, $value in $tokens {
+      --_#{$token}: #{$value};
+    }
+  }
+
+  .md3-fab {
+    width: var(--_container-width);
+    height: var(--_container-height);
+  }
+
+  .md3-fab--regular {
+    padding: 0;
+  }
+}

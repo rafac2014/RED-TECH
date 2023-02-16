@@ -1,0 +1,80 @@
+//
+// Copyright 2022 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// stylelint-disable selector-class-pattern --
+// Selector '.md3-*' should only be used in this project.
+
+// go/keep-sorted start
+@use 'sass:map';
+@use 'sass:string';
+// go/keep-sorted end
+// go/keep-sorted start
+@use '../../elevation/lib/elevation';
+@use '../../sass/theme';
+@use '../../tokens';
+@use './listitem/list-item';
+// go/keep-sorted end
+
+@mixin theme($tokens) {
+  $reference: resolve-tokens(tokens.md-comp-list-values());
+  $tokens: resolve-tokens($tokens);
+  $tokens: theme.validate-theme($reference, $tokens);
+  $tokens: theme.create-theme-vars($tokens, list);
+
+  @include theme.emit-theme-vars($tokens);
+}
+
+@mixin styles() {
+  $tokens: resolve-tokens(tokens.md-comp-list-values());
+  $tokens: theme.create-theme-vars($tokens, list);
+
+  :host {
+    @each $token, $value in $tokens {
+      --_#{$token}: #{$value};
+    }
+
+    color: unset;
+  }
+
+  .md3-list {
+    background-color: var(--_container-color);
+    display: block;
+    list-style-type: none;
+    margin: 0;
+    min-width: 300px;
+    outline: none;
+    padding: 8px 0;
+    // Add position so the elevation overlay (which is absolutely positioned)
+    // can be positioned relative to the list root.
+    position: relative;
+  }
+}
+
+/// Resolves the tokens that are specific to list.
+///
+/// The tokenset for list include list plus all of list item. We do not want to
+/// duplicate tokens and custom properties across md-list and md-list-item.
+/// So here we resolve list-items tokens, and resolve the difference between
+/// the full set of tokens and the ones specific to list-item.
+@function resolve-tokens($tokens) {
+  // We need container color so rename so that we don't lose it
+  $tokens: map.set(
+    $tokens,
+    container-color,
+    map.get($tokens, list-item-container-color)
+  );
+  $list-item-tokens: list-item.resolve-tokens($tokens);
+  $list-tokens: ();
+
+  @each $token, $value in $tokens {
+    $is-unique: not map.has-key($list-item-tokens, $token);
+
+    @if $is-unique {
+      $list-tokens: map.set($list-tokens, $token, $value);
+    }
+  }
+
+  @return $list-tokens;
+}
